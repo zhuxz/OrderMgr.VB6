@@ -2,13 +2,13 @@ VERSION 5.00
 Begin VB.MDIForm MDIMain 
    BackColor       =   &H8000000C&
    Caption         =   "账单管理系统"
-   ClientHeight    =   3030
+   ClientHeight    =   7695
    ClientLeft      =   225
-   ClientTop       =   855
-   ClientWidth     =   4560
+   ClientTop       =   555
+   ClientWidth     =   11940
+   Icon            =   "MDIMain.frx":0000
    LinkTopic       =   "MDIForm1"
-   StartUpPosition =   3  'Windows Default
-   WindowState     =   2  'Maximized
+   StartUpPosition =   2  'CenterScreen
    Begin VB.Menu menuMgr 
       Caption         =   "管理"
       Begin VB.Menu menuOrders 
@@ -17,11 +17,11 @@ Begin VB.MDIForm MDIMain
       Begin VB.Menu menuEmployee 
          Caption         =   "员工"
       End
-      Begin VB.Menu menuRoom 
+      Begin VB.Menu menuRooms 
          Caption         =   "房间"
       End
-      Begin VB.Menu menuOrder 
-         Caption         =   "服务单"
+      Begin VB.Menu menuServices 
+         Caption         =   "服务项目"
       End
    End
    Begin VB.Menu menuCofig 
@@ -36,14 +36,18 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Sub MDIForm_Load()
+    Me.Height = 8400
+    Me.Width = 12100
+    
     Dim frmName As String
     frmName = m_ini.ReadString(mDefine.INISEC_MAIN, mDefine.INIKEY_ACTIVEFORM, "")
     Select Case frmName
         Case mDefine.FORMNAME_CONFIG: ShowForm_Config
         Case mDefine.FORMNAME_ORDERS: ShowForm_Orders
-        Case mDefine.FORMNAME_EMPLOYEE: ShowForm_Employee
-        Case mDefine.FORMNAME_ROOM: ShowForm_Room
+        Case mDefine.FORMNAME_EMPLOYEES: ShowForm_Employees
+        Case FN_(FRMN.Rooms): ShowForm_Rooms
         Case mDefine.FORMNAME_ORDER: ShowForm_Order
+        Case mDefine.FORMNAME_SERVICES: ShowForm_Services
     End Select
 End Sub
 
@@ -59,7 +63,7 @@ Private Sub menuCofig_Click()
 End Sub
 
 Private Sub menuEmployee_Click()
-    ShowForm_Employee
+    ShowForm_Employees
 End Sub
 
 Private Sub menuOrder_Click()
@@ -70,6 +74,10 @@ Private Sub menuOrders_Click()
     ShowForm_Orders
 End Sub
 
-Private Sub menuRoom_Click()
-    ShowForm_Room
+Private Sub menuRooms_Click()
+    ShowForm_Rooms
+End Sub
+
+Private Sub menuServices_Click()
+    ShowForm_Services
 End Sub

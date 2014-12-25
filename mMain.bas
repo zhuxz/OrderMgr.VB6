@@ -3,14 +3,24 @@ Option Explicit
 
 Public m_MDIForm As MDIForm
 Public m_frmConfig As frmConfig
-Public m_frmEmployee As frmEmployee
-Public m_frmRoom As frmRoom
+Public m_frmEmployees As frmEmployees
 Public m_frmOrder As frmOrder
 Public m_frmOrders As frmOrders
+Public m_frmServices As frmServices
+Public m_frmRooms As frmRooms
+
+Public m_frmEmployee As frmEmployee
+Public m_frmService As frmService
+Public m_frmRoom As frmRoom
 
 Public m_ini As CIni
 Public m_db As ADODB.Connection
 Public m_dbSetting As mDefine.DatabaseSetting
+
+Public L_ As Variant
+Public FN_ As Variant
+Public TBN_ As Variant
+Public MSG_ As Variant
 
 Sub Main()
     Set m_ini = New CIni
@@ -23,6 +33,11 @@ Sub Main()
     If m_db Is Nothing Then
         MsgBox mDefine.MSG_CONNECTDB_FAILED, vbExclamation, mDefine.MSG_TITLE
     End If
+    
+    L_ = mMain.BuildLabelCollection()
+    FN_ = mMain.BuildFormNameCollection()
+    TBN_ = mMain.BuildTableNameCollection()
+    MSG_ = mMain.BuildMessageCollection()
     
     Set m_MDIForm = New MDIMain
     m_MDIForm.Show
@@ -39,19 +54,19 @@ eh:
 End Function
 
 Public Function GetDatabaseSetting() As DatabaseSetting
-    Dim source As String
+    Dim Source As String
     Dim ret As mDefine.DatabaseSetting
     
-    source = Trim$(m_ini.ReadString(mDefine.INISEC_DBSETTING, mDefine.INIKEY_SOURCE, ""))
-    If source = "" Then
-        source = App.path & "\" & mDefine.DB_ACCESSFILENAME
+    Source = Trim$(m_ini.ReadString(mDefine.INISEC_DBSETTING, mDefine.INIKEY_SOURCE, ""))
+    If Source = "" Then
+        Source = App.path & "\" & mDefine.DB_ACCESSFILENAME
     End If
     
-    ret.source = source
+    ret.Source = Source
     ret.pwd = Trim$(m_ini.ReadString(mDefine.INISEC_DBSETTING, mDefine.INIKEY_PWD, ""))
     ret.serverIP = Trim$(m_ini.ReadString(mDefine.INISEC_DBSETTING, mDefine.INIKEY_SERVERIP, ""))
     ret.account = Trim$(m_ini.ReadString(mDefine.INISEC_DBSETTING, mDefine.INIKEY_ACCOUNT, ""))
-    ret.cnString = BuildDatabaseConnectString(source, ret.serverIP, ret.account, ret.pwd)
+    ret.cnString = BuildDatabaseConnectString(Source, ret.serverIP, ret.account, ret.pwd)
     
     GetDatabaseSetting = ret
 End Function
@@ -72,7 +87,7 @@ End Function
 Public Sub SaveDatabaseSetting(ByRef Setting As mDefine.DatabaseSetting)
     With m_ini
         .WriteString mDefine.INISEC_DBSETTING, mDefine.INIKEY_SERVERIP, Setting.serverIP
-        .WriteString mDefine.INISEC_DBSETTING, mDefine.INIKEY_SOURCE, Setting.source
+        .WriteString mDefine.INISEC_DBSETTING, mDefine.INIKEY_SOURCE, Setting.Source
         .WriteString mDefine.INISEC_DBSETTING, mDefine.INIKEY_ACCOUNT, Setting.account
         .WriteString mDefine.INISEC_DBSETTING, mDefine.INIKEY_PWD, Setting.pwd
     End With
@@ -90,16 +105,16 @@ Public Sub ShowForm_Orders()
     m_ini.WriteString mDefine.INISEC_MAIN, mDefine.INIKEY_ACTIVEFORM, mDefine.FORMNAME_ORDERS
 End Sub
 
-Public Sub ShowForm_Employee()
-    If m_frmEmployee Is Nothing Then Set m_frmEmployee = New frmEmployee
-    m_frmEmployee.Show: m_frmEmployee.SetFocus
-    m_ini.WriteString mDefine.INISEC_MAIN, mDefine.INIKEY_ACTIVEFORM, mDefine.FORMNAME_EMPLOYEE
+Public Sub ShowForm_Employees()
+    If m_frmEmployees Is Nothing Then Set m_frmEmployees = New frmEmployees
+    m_frmEmployees.Show: m_frmEmployees.SetFocus
+    m_ini.WriteString mDefine.INISEC_MAIN, mDefine.INIKEY_ACTIVEFORM, mDefine.FORMNAME_EMPLOYEES
 End Sub
 
-Public Sub ShowForm_Room()
-    If m_frmRoom Is Nothing Then Set m_frmRoom = New frmRoom
-    m_frmRoom.Show: m_frmRoom.SetFocus
-    m_ini.WriteString mDefine.INISEC_MAIN, mDefine.INIKEY_ACTIVEFORM, mDefine.FORMNAME_ROOM
+Public Sub ShowForm_Rooms()
+    If m_frmRooms Is Nothing Then Set m_frmRooms = New frmRooms
+    m_frmRooms.Show: m_frmRooms.SetFocus
+    m_ini.WriteString mDefine.INISEC_MAIN, mDefine.INIKEY_ACTIVEFORM, FN_(FRMN.Rooms)
 End Sub
 
 Public Sub ShowForm_Order()
@@ -107,6 +122,46 @@ Public Sub ShowForm_Order()
     m_frmOrder.Show: m_frmOrder.SetFocus
     m_ini.WriteString mDefine.INISEC_MAIN, mDefine.INIKEY_ACTIVEFORM, mDefine.FORMNAME_ORDER
 End Sub
+
+Public Sub ShowForm_Services()
+    If m_frmServices Is Nothing Then Set m_frmServices = New frmServices
+    m_frmServices.Show: m_frmServices.SetFocus
+    m_ini.WriteString mDefine.INISEC_MAIN, mDefine.INIKEY_ACTIVEFORM, mDefine.FORMNAME_SERVICES
+End Sub
+
+Public Function BuildLabelCollection()
+    Dim ret(LBL.BOF_ + 1 To LBL.EOF_ - 1) As String
+    ret(LBL.name_) = "姓名"
+    ret(LBL.sex) = "性别"
+    ret(LBL.service_name) = "项目名称"
+    ret(LBL.price) = "单价（元）"
+    ret(LBL.room_name) = "房号"
+    ret(LBL.createDate) = "创建日期"
+    ret(LBL.memo_) = "备注"
+    BuildLabelCollection = ret
+End Function
+
+Public Function BuildFormNameCollection()
+    Dim ret(FRMN.BOF_ + 1 To FRMN.EOF_ - 1) As String
+    ret(FRMN.Rooms) = "frmRooms"
+    ret(FRMN.Orders) = "frmRooms"
+    BuildFormNameCollection = ret
+End Function
+
+Public Function BuildTableNameCollection()
+    Dim ret(TBN.BOF_ + 1 To TBN.EOF_ - 1) As String
+    ret(TBN.Rooms) = "rooms"
+    ret(TBN.Orders) = "orders"
+    BuildTableNameCollection = ret
+End Function
+
+Public Function BuildMessageCollection()
+    Dim ret(MSG.BOF_ + 1 To MSG.EOF_ - 1) As String
+    ret(MSG.ValidRoomName) = "房号不能空."
+    ret(MSG.ValidServiceName) = "服务名称不能空."
+    ret(MSG.ValidServicePrice) = "单价不能空."
+    BuildMessageCollection = ret
+End Function
 
 'Public Function IsFormExists(ByVal FormName As String) As Boolean
 '    Dim ctl As Object

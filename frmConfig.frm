@@ -120,6 +120,7 @@ Private Sub cmdDBSave_Click()
     Dim dbSetting As mDefine.DatabaseSetting
     dbSetting = GetDbSetting()
     mMain.SaveDatabaseSetting dbSetting
+    MsgBox mDefine.MSG_CONNECTDB_SUCCESS, vbInformation, mDefine.MSG_TITLE
 End Sub
 
 Private Sub cmdDBTest_Click()

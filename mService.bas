@@ -1,24 +1,24 @@
-Attribute VB_Name = "mEmployee"
+Attribute VB_Name = "mService"
 Option Explicit
 
-Public Function LoadEmployeesFromDB(Conn As ADODB.Connection, Optional ByVal Filter As Variant = Empty)
+Public Function LoadServicesFromDB(Conn As ADODB.Connection, Optional ByVal Filter As Variant = Empty)
     Dim sql As String
-    sql = "SELECT * FROM " & mDefine.DBTN_EMPLOYEES
+    sql = "SELECT * FROM " & mDefine.DBTN_SERVICES
 
     Dim arr() As String
     Dim n As Long
 
     If Not IsEmpty(Filter) Then
-        If Len(Filter(Employee.name_)) > 0 Then
+        If Len(Filter(Service.name_)) > 0 Then
             n = n + 1
             ReDim Preserve arr(1 To n) As String
-            arr(n) = "name like '%" & Filter(Employee.name_) & "%'"
+            arr(n) = "desc like '%" & Filter(Service.name_) & "%'"
         End If
 
-        If Len(Filter(Employee.sex)) > 0 Then
+        If Len(Filter(Service.price)) > 0 Then
             n = n + 1
             ReDim Preserve arr(1 To n) As String
-            arr(n) = "sex='" & Filter(Employee.sex) & "'"
+            arr(n) = "price=" & Filter(Service.price)
         End If
 
         If n > 0 Then
@@ -38,25 +38,25 @@ Public Function LoadEmployeesFromDB(Conn As ADODB.Connection, Optional ByVal Fil
             ''
         Else
             Do
-                item = VariantArr(Employee.BOF_ + 1, Employee.EOF_ - 1)
-                item(Employee.id) = rs("ID").value
-                item(Employee.name_) = rs("name").value
-                item(Employee.sex) = rs("sex").value
+                item = VariantArr(Service.BOF_ + 1, Service.EOF_ - 1)
+                item(Service.id) = rs("ID").value
+                item(Service.name_) = rs("desc").value
+                item(Service.price) = rs("price").value
                 AppendToVariantArr ret, item
                 rs.MoveNext
             Loop While Not rs.EOF
-            LoadEmployeesFromDB = ret
+            LoadServicesFromDB = ret
         End If
     End If
 End Function
 
-Public Function DeleteEmployeesByIds(ByVal IDArr As Variant)
+Public Function DeleteServicesByIds(ByVal IDArr As Variant)
     If IsArray(IDArr) Then
         Dim ids As String
         Dim sql As String
 
         ids = Join(IDArr, ",")
-        sql = "DELETE * FROM " & mDefine.DBTN_EMPLOYEES & " WHERE ID IN (" & ids & ")"
+        sql = "DELETE * FROM " & mDefine.DBTN_SERVICES & " WHERE ID IN (" & ids & ")"
         m_db.Execute sql
     End If
 End Function

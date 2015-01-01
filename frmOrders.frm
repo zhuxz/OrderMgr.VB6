@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "Mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmOrders 
    Caption         =   "·þÎñµ¥"
    ClientHeight    =   8475
@@ -211,8 +211,10 @@ Private Sub cmdDeleteOrders_Click()
         End If
     Next
     If IsArray(del_ids) Then
-        DeleteOrdersByIds del_ids
-        RefreshOrders
+        If MsgBox(MSG_(MSG.QueryDelete), vbYesNo, mDefine.MSG_TITLE) = vbYes Then
+            DeleteOrdersByIds del_ids
+            RefreshOrders
+        End If
     End If
 End Sub
 

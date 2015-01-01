@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "Mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmServices 
    Caption         =   "服务项目"
    ClientHeight    =   7605
@@ -162,8 +162,10 @@ Private Sub cmdDeleteServices_Click()
         End If
     Next
     If IsArray(del_ids) Then
-        DeleteServicesByIds del_ids
-        RefreshServices
+        If MsgBox(MSG_(MSG.QueryDelete), vbYesNo, mDefine.MSG_TITLE) = vbYes Then
+            DeleteServicesByIds del_ids
+            RefreshServices
+        End If
     End If
 End Sub
 
@@ -206,7 +208,7 @@ Private Sub PopulateServices(Optional ByVal Filter As Variant = Empty)
         .ListItems.Clear
         If Not IsEmpty(services) Then
             For i = LBound(services) To UBound(services)
-                Set lvItem = .ListItems.Add(i + 1, "id " & (services(i)(Service.id)), services(i)(Service.name_))
+                Set lvItem = .ListItems.Add(i + 1, "id " & (services(i)(Service.ID)), services(i)(Service.name_))
                 lvItem.SubItems(1) = services(i)(Service.price)
             Next
         End If

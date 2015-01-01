@@ -120,5 +120,6 @@ Public Enum MSG
     ValidRoomName
     ValidServiceName
     ValidServicePrice
+    QueryDelete
     EOF_
 End Enum

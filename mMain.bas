@@ -160,6 +160,7 @@ Public Function BuildMessageCollection()
     ret(MSG.ValidRoomName) = "房号不能空."
     ret(MSG.ValidServiceName) = "服务名称不能空."
     ret(MSG.ValidServicePrice) = "单价不能空."
+    ret(MSG.QueryDelete) = "确定删除？"
     BuildMessageCollection = ret
 End Function
 

@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "Mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmRooms 
    Caption         =   "·¿¼ä"
    ClientHeight    =   7605
@@ -144,8 +144,10 @@ Private Sub cmdDeleteRooms_Click()
         End If
     Next
     If IsArray(del_ids) Then
-        DeleteRoomsByIds del_ids
-        RefreshRooms
+        If MsgBox(MSG_(MSG.QueryDelete), vbYesNo, mDefine.MSG_TITLE) = vbYes Then
+            DeleteRoomsByIds del_ids
+            RefreshRooms
+        End If
     End If
 End Sub
 
@@ -186,7 +188,7 @@ Private Sub PopulateRooms(Optional ByVal Filter As Variant = Empty)
         .ListItems.Clear
         If Not IsEmpty(Rooms) Then
             For i = LBound(Rooms) To UBound(Rooms)
-                Set lvItem = .ListItems.Add(i + 1, "id " & (Rooms(i)(Room.id)), Rooms(i)(Room.name_))
+                Set lvItem = .ListItems.Add(i + 1, "id " & (Rooms(i)(Room.ID)), Rooms(i)(Room.name_))
             Next
         End If
     End With

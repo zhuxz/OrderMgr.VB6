@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "Mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmEmployees 
    Caption         =   "Ô±¹¤"
    ClientHeight    =   7605
@@ -164,8 +164,10 @@ Private Sub cmdDeleteEmployee_Click()
         End If
     Next
     If IsArray(del_ids) Then
-        DeleteEmployeesByIds del_ids
-        RefreshEmployees
+        If MsgBox(MSG_(MSG.QueryDelete), vbYesNo, mDefine.MSG_TITLE) = vbYes Then
+            DeleteEmployeesByIds del_ids
+            RefreshEmployees
+        End If
     End If
 End Sub
 
